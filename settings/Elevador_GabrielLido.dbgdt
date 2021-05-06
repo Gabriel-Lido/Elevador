@@ -729,7 +729,7 @@
             <IarPane-34090>
                 <expressions>
                     <item>teste</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

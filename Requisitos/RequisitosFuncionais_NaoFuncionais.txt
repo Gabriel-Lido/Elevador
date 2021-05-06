@@ -1,0 +1,9 @@
+Sistema de controle de Elevador - Gabriel Lido Amaral
+
+Requisitos Funcionais:
+- Controle do sistema de elevador
+- Comunicação com o simulador via UART
+
+Requisitos Não-Funcionais:
+- Utilização do RTOS RTX5
+- Utilização do kit EK-TM4C1294XL
