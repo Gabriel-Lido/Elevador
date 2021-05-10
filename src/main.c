@@ -4,10 +4,12 @@
 #include "cmsis_os2.h"       // CMSIS-RTOS
 #include "stdbool.h"
 #include "inc/hw_memmap.h"
+#include "inc/hw_ints.h"
 #include "driverlib/gpio.h"
 #include "driverlib/uart.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
+#include "driverlib/interrupt.h"
 #include "utils/uartstdio.h"
 #include "system_TM4C1294.h"
 
@@ -38,7 +40,7 @@ void manager_thread(void *arg){
   uint8_t teste[] = "Teste envio serial\n";
   
   while(1) {
-    UARTwrite(teste, sizeof(teste) + 1);
+  //  UARTwrite(teste, sizeof(teste) + 1);
     osDelay(500);
   }
 }
@@ -97,6 +99,12 @@ void button_ISR(void)
   }
 }
 
+void UARTRxHandler(void)
+{
+    UARTIntClear(UART0_BASE, UART_INT_RX);
+   //osThreadFlagsSet(newMessageThread, 0x0001); // sent message to the thread that will read the uart
+}
+
 void UART0_Init(void)
 {
   // Enable UART0
@@ -111,12 +119,14 @@ void UART0_Init(void)
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA));
 
   // Configure GPIO Pins for UART mode.
-  GPIOPinConfigure(0x1);
-  GPIOPinConfigure(0x401);
+  //GPIOPinConfigure(GPIO_PA0_U0RX);
+  //GPIOPinConfigure(GPIO_PA1_U0TX);
   GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
   
-//  UARTIntEnable(UART0_BASE , UART_INT_RX);
-//  IntEnable(21);
+  UARTConfigSetExpClk(UART0_BASE, SystemCoreClock, 115200, (UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE | UART_CONFIG_WLEN_8));
+  UARTIntEnable(UART0_BASE, UART_INT_RX);
+ // IntEnable(INT_UART0);
+  UARTEnable(UART0_BASE);
 }
 
 int teste = 1;
@@ -134,7 +144,4 @@ void UART0_Handler(void)
     if(ui32Status & UART_INT_RX) {
       teste = 9;
     }
-    //
-    // Clear the asserted interrupts.
-    //
 }

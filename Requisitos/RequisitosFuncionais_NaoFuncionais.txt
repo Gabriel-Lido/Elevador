@@ -1,9 +1,16 @@
 Sistema de controle de Elevador - Gabriel Lido Amaral
 
 Requisitos Funcionais:
-- Controle do sistema de elevador
-- Comunicação com o simulador via UART
+- Comunicação com o simulador via UART.
+- Utilizar protocolo já estabelecido.
+- Utilizar pelo menos 3 tarefas
 
-Requisitos Não-Funcionais:
+Requisitos não funcionais:
+- Transmissão e recepção utilizando interrupções.
+- Quando um botão for apertado, o buffer enviado para a placa será recebido via interrupção, 
+que indicara o recebimento via event flag para a thread de gerenciamento, que fará o tratamento dos dados.
+- A thread de gerenciamento ficará responsável por realizar a identificação dos dados presente no buffer 
+recebido do simulador e direcionar os mesmos para a respectiva thread do elevador correspondente. (4 threads no total)
+- (Verificar a necessidade de proteção com mutex)
 - Utilização do RTOS RTX5
 - Utilização do kit EK-TM4C1294XL
